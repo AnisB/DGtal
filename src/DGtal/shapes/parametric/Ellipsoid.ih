@@ -78,28 +78,29 @@ inline
 AngularCoordinates
 DGtal::Ellipsoid<T>::parameter( const RealPoint & pp ) const
 {
-  RealPoint p( pp );
-  p -= myCenter;
+  RealPoint l( pp );
+  l -= myCenter;
   AngularCoordinates angle ; 
-  RealPoint l=p;
+  
   
   
   if((fabs(l[0])<0.0001)&&(fabs(l[1])<0.0001))
   {
     angle.first=0;
-    if(l[2]>0)
+    if(l[2]>=0)
     angle.second=0;
     if(l[2]<0)
     angle.second=M_PI;
   }
   else
   {
-  angle.first=atan(l[1]/l[0]);
+  angle.first=atan2(l[1],l[0]);
   if(l[1]>=0)
   angle.second=asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
   if(l[1]<0)
   angle.second=-asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
   }
+  return angle;
   
   /*
   if ( ( fabs(l[1])==0 )&& ( fabs(l[0])==0 ) )
@@ -140,7 +141,7 @@ inline
 typename DGtal::Ellipsoid<T>::RealPoint 
 DGtal::Ellipsoid<T>::x( AngularCoordinates t ) const
 {
-  RealPoint c( myFactors[0]*cos(t.first)*cos(t.second),myFactors[1]*cos(t.first)*sin(t.second),myFactors[2]*sin(t.first));   
+  RealPoint c( myFactors[0]*cos(t.first)*cos(t.second),myFactors[1]*sin(t.first)*cos(t.second),myFactors[2]*sin(t.second));   
    c += myCenter;
   
 

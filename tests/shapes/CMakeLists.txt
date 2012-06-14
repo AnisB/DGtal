@@ -18,6 +18,8 @@ SET(QGLVIEWER_SHAPES_TESTS_SRC
   testAstroidalBall
   testEllipsoid
   testBall3D
+  testFlower3D
+  testAccFlower3D
   )
 
 if (  WITH_VISU3D_QGLVIEWER )

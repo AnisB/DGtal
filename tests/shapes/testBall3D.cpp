@@ -66,7 +66,7 @@
    
    // -------------------------------------------------------------------------- Creating the shape
     RealPoint c1(0, 0, 0 );
-    EuclideanShape ball1( c1, 12.2 ); 
+    EuclideanShape ball1( c1, 12 ); 
 	       
    // -------------------------------------------------------------------------- GaussDigitizing
     DigitalShape dshape;
@@ -114,7 +114,7 @@
 //-----------------------------------------------------------------------
 //Specifing a color map
 
-  GradientColorMap<double> cmap_grad( 10, 20 );
+  GradientColorMap<double> cmap_grad( 0, 0.1 );
   cmap_grad.addColor( Color( 50, 50, 255 ) );
   cmap_grad.addColor( Color( 255, 0, 0 ) );
   cmap_grad.addColor( Color( 255, 255, 10 ) );
@@ -133,7 +133,11 @@
     RealPoint A = midpoint( *it );
 
     DGtal::StarShaped3D<Space>::AngularCoordinates  Angles= ball1.parameter(A);
-    double curvature =ball1.meanCurvature(Angles);
+    double curvature =ball1.gaussianCurvature(Angles);
+
+    cout<<"Gaussian"<<curvature<<endl;
+
+    cout<<"Mean"<<ball1.meanCurvature(Angles)<<endl;
     viewer <<   CustomColors3D( Color::Black, cmap_grad( curvature));
     viewer << *it;
   }

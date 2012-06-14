@@ -66,7 +66,7 @@
    
    // -------------------------------------------------------------------------- Creating the shape
     RealPoint c1(0, 0, 0 );
-    RealPoint factors(6,6,12);
+    RealPoint factors(3,3,12);
     EuclideanShape ball1( c1, factors ); 
 	
        

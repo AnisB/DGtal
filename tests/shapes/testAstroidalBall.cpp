@@ -76,7 +76,7 @@
     dshape.attach( ball1 );
     RealPoint p1 =RealPoint( -15.0, -15.0, -15.0 );
     RealPoint p2 =RealPoint( 15.0, 15.0, 15.0 );
-    dshape.init( RealPoint( p1 ), RealPoint( p2 ), 1.0);
+    dshape.init( RealPoint( p1 ), RealPoint( p2 ), 0.2);
     Domain domain = dshape.getDomain();
 
    
@@ -84,6 +84,7 @@
     KSpace K;
     bool space_ok = K.init( domain.lowerBound(), domain.upperBound(), true );
     if (!space_ok)
+
     {
       return 2;
     }
@@ -115,7 +116,7 @@
 
 
 //----------------------------------------------------------------------- Specifing a color map
-  GradientColorMap<double> cmap_grad( 10, 20 );
+  GradientColorMap<double> cmap_grad( 0,10 );
   cmap_grad.addColor( Color( 50, 50, 255 ) );
   cmap_grad.addColor( Color( 255, 0, 0 ) );
   cmap_grad.addColor( Color( 255, 255, 10 ) );
@@ -131,8 +132,10 @@
     RealPoint A = midpoint( *it );
 
     DGtal::StarShaped3D<Space>::AngularCoordinates  Angles= ball1.parameter(A);
-    double curvature =ball1.meanCurvature(Angles);
-    viewer <<   CustomColors3D( Color::Black, cmap_grad( curvature));
+    double curvature =ball1.gaussianCurvature(Angles);
+//    cout<<curvature<<endl;
+//    if((curvature==curvature)&&(fabs(curvature) < 300))
+    viewer <<   CustomColors3D( Color::Black, cmap_grad( 1));
     viewer << *it;
   }
 

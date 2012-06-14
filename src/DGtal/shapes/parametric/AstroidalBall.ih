@@ -78,66 +78,28 @@ inline
 AngularCoordinates
 DGtal::AstroidalBall<T>::parameter( const RealPoint & pp ) const
 {
-  RealPoint p( pp );
-  p -= myCenter;
+    RealPoint l( pp );
+  l -= myCenter;
   AngularCoordinates angle ; 
-  RealPoint l=p;
   
   
-    
-  if((l[0]==0)&&(l[1]==0))
+  
+  if((fabs(l[0])<0.0001)&&(fabs(l[1])<0.0001))
   {
-    angle.first=0;
-    if(l[2]>0)
-    angle.second=0;
+    angle.first=0.0;
+    if(l[2]>=0)
+    angle.second=0.0;
     if(l[2]<0)
     angle.second=M_PI;
   }
   else
   {
-    
-  if((l[0]==0)&&(l[1]>0))
-    angle.first=M_PI/2.0;
-  else if((l[0]==0)&&(l[1]<0))
-    angle.first=-M_PI/2.0;
-  else
   angle.first=atan(l[1]/l[0]);
-  
-  
-  
-
-  if(l[1]>=0)
-  angle.second=asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
-  
-  if(l[1]<0)
-  angle.second=-asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
+  if(l[0]>=0.0)
+  angle.second=acos(sqrt(l[2]*l[2])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
+  if(l[0]<0.0)
+  angle.second=-acos(sqrt(l[2]*l[2])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
   }
-  
-  /*
-  if ( ( fabs(l[1])==0 )&& ( fabs(l[0])==0 ) )
-  {
-    angle.first=0;
-  }
-  else
-  {
-    
-    if((l[1]>0.0))
-     angle.first= atan(l[0]/sqrt(l[0]*l[0]+l[1]*l[1]));
-  
-      if((l[1]<0.0))
-     angle.first= 2*M_PI-atan(l[0]/sqrt(l[0]*l[0]+l[1]*l[1]));
-  }
-    if(l[2]==0)
-    {
-	angle.second = M_PI/2.0;
-    }
-    else
-    {
-      double norme=sqrt(l[0]*l[0]+l[1]*l[1]);
-      angle.second=atan(norme/l[2]);
-    }*/
-  
-  
   return angle;
 }
 
@@ -152,11 +114,32 @@ inline
 typename DGtal::AstroidalBall<T>::RealPoint 
 DGtal::AstroidalBall<T>::x( AngularCoordinates t ) const
 {
-  double sin3f =sin(t.first)*sin(t.first)*sin(t.first);
-  double cos3f=cos(t.first)*cos(t.first)*cos(t.first);
-  double sin3t =sin(t.second)*sin(t.second)*sin(t.second);
-  double cos3t =cos(t.second)*cos(t.second)*cos(t.second);
-  RealPoint c( myFactors[0]*myFactors[0]*myFactors[0]*cos3t*cos3f,myFactors[1]*myFactors[1]*myFactors[1]*sin3t*cos3f,myFactors[2]*myFactors[2]*myFactors[2]*sin3f);   
+  double mf0= myFactors[0]*myFactors[0]*myFactors[0];
+  double mf1= myFactors[1]*myFactors[1]*myFactors[1];
+  double mf2= myFactors[2]*myFactors[2]*myFactors[2];
+
+  double sin3t =(sin(t.first)*sin(t.first)*sin(t.first));
+
+  double cos3t=(cos(t.first)*cos(t.first)*cos(t.first));
+
+
+  double sin3p =(sin(t.second)*sin(t.second)*sin(t.second));
+
+  double cos3p =(cos(t.second)*cos(t.second)*cos(t.second));
+
+  RealPoint c(mf0*cos3t*cos3p,mf1*sin3t*cos3p,mf2*sin3p);
+ 
+
+//	std::cout<<t.first<<" "<<t.second<<std::endl;  
+//	std::cout<<c<<std::endl; 
+
+
+double a= pow(fabs(c[0]),2.0/3.0)+pow(fabs(c[1]),2.0/3.0)+pow(fabs(c[2]),2.0/3.0);
+cout<<a<<endl;
+ASSERT(fabs(a - 4) < 0.0001); 
+
+//cout<<c[0] << " "<<c[1] << " "<<c[2] << " "<<endl;
+
    c += myCenter;
    
   return c;
@@ -175,9 +158,9 @@ typename DGtal::AstroidalBall<T>::RealPoint
 DGtal::AstroidalBall<T>::gradient( const AngularCoordinates t) const 
 {
   RealPoint p= x(t);
-  double x=2*(p[0]-myCenter[0])/(myFactors[0]*myFactors[0]);
-  double y =2*(p[1]-myCenter[1])/(myFactors[1]*myFactors[1]);
-  double z=2*(p[2]-myCenter[2]/(myFactors[2]*myFactors[2]));
+  double x=2.0f*(p[0]-myCenter[0])/(myFactors[0]*myFactors[0]);
+  double y =2.0f*(p[1]-myCenter[1])/(myFactors[1]*myFactors[1]);
+  double z=2.0f*(p[2]-myCenter[2]/(myFactors[2]*myFactors[2]));
   return RealPoint(x,y,z);
 }
 
@@ -191,7 +174,25 @@ inline
 typename DGtal::AstroidalBall<T>::RealPoint 
 DGtal::AstroidalBall<T>::rt( const AngularCoordinates t) const 
 {
-	return RealPoint(-myFactors[0]*sin(t.first)*sin(t.second),myFactors[1]*cos(t.first)*sin(t.second),0);
+
+  double mf0= myFactors[0]*myFactors[0]*myFactors[0];
+  double mf1= myFactors[1]*myFactors[1]*myFactors[1];
+  double mf2= myFactors[2]*myFactors[2]*myFactors[2];
+
+  double sin3t =sin(t.first)*sin(t.first)*sin(t.first);
+  double sin2t =sin(t.first)*sin(t.first);
+
+  double cos3t=cos(t.first)*cos(t.first)*cos(t.first);
+  double cos2t=cos(t.first)*cos(t.first);
+
+
+  double sin3p =sin(t.second)*sin(t.second)*sin(t.second);
+  double sin2p =sin(t.second)*sin(t.second); 
+
+  double cos3p =cos(t.second)*cos(t.second)*cos(t.second);
+  double cos2p =cos(t.second)*cos(t.second);
+
+	return RealPoint(-mf0*3.0f*cos2t*sin(t.first)*cos3p,mf1*3.0f*sin2t*cos(t.first)*cos3p,0);
 }
 
 
@@ -206,7 +207,23 @@ inline
 typename DGtal::AstroidalBall<T>::RealPoint 
 DGtal::AstroidalBall<T>::rp( const AngularCoordinates t) const 
 {
-  return RealPoint(myFactors[0]*cos(t.first)*cos(t.second),myFactors[1]*sin(t.first )*cos(t.second),-myFactors[2]*sin(t.second));
+  double mf0= myFactors[0]*myFactors[0]*myFactors[0];
+  double mf1= myFactors[1]*myFactors[1]*myFactors[1];
+  double mf2= myFactors[2]*myFactors[2]*myFactors[2];
+
+  double sin3t =sin(t.first)*sin(t.first)*sin(t.first);
+  double sin2t =sin(t.first)*sin(t.first);
+
+  double cos3t=cos(t.first)*cos(t.first)*cos(t.first);
+  double cos2t=cos(t.first)*cos(t.first);
+
+
+  double sin3p =sin(t.second)*sin(t.second)*sin(t.second);
+  double sin2p =sin(t.second)*sin(t.second); 
+
+  double cos3p =cos(t.second)*cos(t.second)*cos(t.second);
+  double cos2p =cos(t.second)*cos(t.second);
+  return RealPoint(-mf0*3.0f*cos3t*cos2p*sin(t.second),-mf1*3.0f*sin3t*cos2p*sin(t.second),-3.0f*mf2*sin2p*cos(t.second));
 }
 
 
@@ -219,8 +236,27 @@ template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
 DGtal::AstroidalBall<T>::rtt( const AngularCoordinates t) const 
-{
-  return RealPoint(-myFactors[0]*cos(t.first)*sin(t.second),-myFactors[1]*sin(t.first)*sin(t.second),0);
+{ 
+  double mf0= myFactors[0]*myFactors[0]*myFactors[0];
+  double mf1= myFactors[1]*myFactors[1]*myFactors[1];
+  double mf2= myFactors[2]*myFactors[2]*myFactors[2];
+
+  double sin3t =sin(t.first)*sin(t.first)*sin(t.first);
+  double sin2t =sin(t.first)*sin(t.first);
+
+  double cos3t=cos(t.first)*cos(t.first)*cos(t.first);
+  double cos2t=cos(t.first)*cos(t.first);
+
+
+  double sin3p =sin(t.second)*sin(t.second)*sin(t.second);
+  double sin2p =sin(t.second)*sin(t.second); 
+
+  double cos3p =cos(t.second)*cos(t.second)*cos(t.second);
+  double cos2p =cos(t.second)*cos(t.second);
+
+
+
+  return RealPoint(-3.0f*mf0*cos3p*(-2.0f*cos(t.first)*sin2t+cos3p),3.0f*mf1*cos3p*(2.0f*sin(t.first)*cos2t-sin3t),0);
 }
 
 
@@ -235,7 +271,25 @@ inline
 typename DGtal::AstroidalBall<T>::RealPoint 
 DGtal::AstroidalBall<T>::rpp( const AngularCoordinates t) const 
 {
-  return RealPoint(-myFactors[0]*cos(t.first)*sin(t.second),-myFactors[1]*sin(t.first)*sin(t.second),-cos(t.second));
+
+  double mf0= myFactors[0]*myFactors[0]*myFactors[0];
+  double mf1= myFactors[1]*myFactors[1]*myFactors[1];
+  double mf2= myFactors[2]*myFactors[2]*myFactors[2];
+
+  double sin3t =sin(t.first)*sin(t.first)*sin(t.first);
+  double sin2t =sin(t.first)*sin(t.first);
+
+  double cos3t=cos(t.first)*cos(t.first)*cos(t.first);
+  double cos2t=cos(t.first)*cos(t.first);
+
+
+  double sin3p =sin(t.second)*sin(t.second)*sin(t.second);
+  double sin2p =sin(t.second)*sin(t.second); 
+
+  double cos3p =cos(t.second)*cos(t.second)*cos(t.second);
+  double cos2p =cos(t.second)*cos(t.second);
+
+  return RealPoint(-3.0f*mf0*cos3t*(-2.0f*cos(t.second)*sin2p+cos3p),-3.0f*mf1*sin3t*(-2*cos(t.second)*sin2p+cos3p),-3.0f*mf2*(sin(t.second)*cos2p-sin3p));
 }
     
 /**
@@ -248,7 +302,25 @@ inline
 typename DGtal::AstroidalBall<T>::RealPoint 
 DGtal::AstroidalBall<T>::rtp( const AngularCoordinates t) const 
 {
-  return RealPoint(-myFactors[0]*sin(t.first)*cos(t.second),myFactors[1]*cos(t.first)*cos(t.second),0);
+  double mf0= myFactors[0]*myFactors[0]*myFactors[0];
+  double mf1= myFactors[1]*myFactors[1]*myFactors[1];
+  double mf2= myFactors[2]*myFactors[2]*myFactors[2];
+
+  double sin3t =sin(t.first)*sin(t.first)*sin(t.first);
+  double sin2t =sin(t.first)*sin(t.first);
+
+  double cos3t=cos(t.first)*cos(t.first)*cos(t.first);
+  double cos2t=cos(t.first)*cos(t.first);
+
+
+  double sin3p =sin(t.second)*sin(t.second)*sin(t.second);
+  double sin2p =sin(t.second)*sin(t.second); 
+
+  double cos3p =cos(t.second)*cos(t.second)*cos(t.second);
+  double cos2p =cos(t.second)*cos(t.second);
+
+
+  return RealPoint(9.0f*mf0*cos2t*sin(t.first)*sin(t.second)*cos2p,-9.0f*mf1*sin2t*cos(t.first)*sin(t.second)*cos2p,0);
 }
     
 
