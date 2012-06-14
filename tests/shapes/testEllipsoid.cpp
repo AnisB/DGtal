@@ -65,9 +65,9 @@
     
    
    // -------------------------------------------------------------------------- Creating the shape
-    RealPoint c1(0, 0, 0 );
-    RealPoint factors(3,3,12);
-    EuclideanShape ball1( c1, factors ); 
+    RealPoint center(0, 0, 0 );
+    RealPoint factors(12,10,4);
+    EuclideanShape ball1( center, factors ); 
 	
        
    // -------------------------------------------------------------------------- GaussDigitizing
@@ -75,7 +75,7 @@
     dshape.attach( ball1 );
     RealPoint p1 =RealPoint( -15.0, -15.0, -15.0 );
     RealPoint p2 =RealPoint( 15.0, 15.0, 15.0 );
-    dshape.init( RealPoint( p1 ), RealPoint( p2 ), 1.0);
+    dshape.init( RealPoint( p1 ), RealPoint( p2 ), 0.5);
     Domain domain = dshape.getDomain();
 
    

@@ -60,7 +60,8 @@ DGtal::AccFlower3D<T>::AccFlower3D( const double x0, const double y0, const doub
 
 template <typename T>
 inline
-DGtal::AccFlower3D<T>::AccFlower3D(const RealPoint &aPoint,const double r, const double smallr, const double k,const double phi  ):
+DGtal::AccFlower3D<T>::AccFlower3D(const RealPoint &aPoint,const double r,
+				   const double smallr, const double k,const double phi  ):
   myRadius(r), myCenter(aPoint),mySmallR(smallr),myK(k),myPhi(phi) 
 {}
 
@@ -113,7 +114,7 @@ DGtal::AccFlower3D<T>::parameter( const RealPoint & pp ) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::x( AngularCoordinates t ) const
+DGtal::AccFlower3D<T>::x( const AngularCoordinates &t ) const
 {
 
 
@@ -187,7 +188,7 @@ DGtal::AccFlower3D<T>::x( AngularCoordinates t ) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::gradient( const AngularCoordinates t) const 
+DGtal::AccFlower3D<T>::gradient( const AngularCoordinates &t) const 
 {
   RealPoint p= x(t);
   double x=2*(p[0]-myCenter[0]);
@@ -204,7 +205,7 @@ DGtal::AccFlower3D<T>::gradient( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::rt( const AngularCoordinates t) const 
+DGtal::AccFlower3D<T>::rt( const AngularCoordinates &t) const 
 {
 
 	double r= myRadius+ mySmallR*cos(myK*t.first+myPhi)*cos(myK*t.second+myPhi);
@@ -227,7 +228,7 @@ DGtal::AccFlower3D<T>::rt( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::rp( const AngularCoordinates t) const 
+DGtal::AccFlower3D<T>::rp( const AngularCoordinates &t) const 
 {
    double r= myRadius+ mySmallR*cos(myK*t.first+myPhi)*cos(myK*t.second+myPhi);
 
@@ -248,7 +249,7 @@ DGtal::AccFlower3D<T>::rp( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::rtt( const AngularCoordinates t) const 
+DGtal::AccFlower3D<T>::rtt( const AngularCoordinates &t) const 
 {
   double r= myRadius+ mySmallR*cos(myK*t.first+myPhi)*cos(myK*t.second+myPhi);
 
@@ -272,7 +273,7 @@ DGtal::AccFlower3D<T>::rtt( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::rpp( const AngularCoordinates t) const 
+DGtal::AccFlower3D<T>::rpp( const AngularCoordinates& t) const 
 {
    double r= myRadius+ mySmallR*cos(myK*t.first+myPhi)*cos(myK*t.second+myPhi);
 
@@ -293,7 +294,7 @@ DGtal::AccFlower3D<T>::rpp( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AccFlower3D<T>::RealPoint 
-DGtal::AccFlower3D<T>::rtp( const AngularCoordinates t) const 
+DGtal::AccFlower3D<T>::rtp( const AngularCoordinates& t) const 
 {
 
   double r= myRadius+ mySmallR*cos(myK*t.first+myPhi)*cos(myK*t.second+myPhi);

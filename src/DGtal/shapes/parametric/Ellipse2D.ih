@@ -130,8 +130,7 @@ DGtal::Ellipse2D<T>::x( double t ) const
   double sint = sin( t );
   double rho = myAxis2 / sqrt( 1.0 - ((a2-b2)/a2)*costth*costth);
     //myAxis2*myAxis1 / sqrt( a2 - (a2-b2)*costth*costth);
-  RealPoint2D v( rho*cost, 
-     rho*sint );
+  RealPoint2D v( rho*cost, rho*sint );
   v += myCenter;
   return v;
 }

@@ -79,14 +79,16 @@ namespace DGtal
      * @param b the factor of y.
      * @param c the factor of c.
      */
-    Ellipsoid( const double x0, const double y0, const double  z0, const double a, const double b, const double  c);
+    Ellipsoid( const double x0, const double y0, const double  z0,
+	       const double a, const double b, const double  c);
 
     /**
      * Constructor. 
      * @param aPoint the Ellipsoid center.
      * @param aFactors the Ellipsoid factors
      */
-    Ellipsoid(const RealPoint &aPoint, const RealPoint &aFactors);
+    Ellipsoid(const RealPoint &aPoint, 
+	      const RealPoint &aFactors);
 
     
     /**
@@ -110,7 +112,9 @@ namespace DGtal
     RealPoint getLowerBound() const
     {
 
-      return RealPoint(myCenter[0] - myFactors[0], myCenter[1] - myFactors[1], myCenter[2] - myFactors[2] );
+      return RealPoint(myCenter[0] - myFactors[0],
+		       myCenter[1] - myFactors[1],
+		       myCenter[2] - myFactors[2] );
     }
 
     /**
@@ -119,7 +123,9 @@ namespace DGtal
      */
     RealPoint getUpperBound() const
     {
-      return RealPoint(myCenter[0] + myFactors[0], myCenter[1] + myFactors[1], myCenter[2] + myFactors[2]);
+      return RealPoint(myCenter[0] + myFactors[0], 
+		       myCenter[1] + myFactors[1], 
+		       myCenter[2] + myFactors[2]);
     }
 
     /**
@@ -146,7 +152,7 @@ namespace DGtal
      * @return the vector (x(t),y(t),z(t)) which is the position on the
      * shape boundary.
      */
-    RealPoint x( const AngularCoordinates t ) const;
+    RealPoint x( const AngularCoordinates &t ) const;
 
 
 
@@ -156,7 +162,7 @@ namespace DGtal
      *
      * @return the vector (gradf(M)).
      */
-    virtual RealPoint gradient( const AngularCoordinates t) const ;
+    virtual RealPoint gradient( const AngularCoordinates &t) const ;
 
     
     
@@ -165,7 +171,7 @@ namespace DGtal
      *
      * @return the vector (rt(M)) wich is the partial derivative with respect to Teta.
      */
-    virtual RealPoint rt( const AngularCoordinates t) const ;
+    virtual RealPoint rt( const AngularCoordinates & t) const ;
 
 
 
@@ -174,7 +180,7 @@ namespace DGtal
      *
      * @return the vector (rp(M)) wich is the partial derivative with respect to Phi.
      */
-    virtual RealPoint rp( const AngularCoordinates t) const ;
+    virtual RealPoint rp( const AngularCoordinates &t) const ;
 
 
     /**
@@ -182,7 +188,7 @@ namespace DGtal
      *
      * @return the vector (rtt(M)) wich is second the partial derivative with respect to Teta(twice).
      */
-    virtual RealPoint rtt( const AngularCoordinates t) const ;
+    virtual RealPoint rtt( const AngularCoordinates &t) const ;
 
 
 
@@ -191,7 +197,7 @@ namespace DGtal
      *
      * @return the vector (rpp(M)) wich is second the partial derivative with respect to Phi(twice).
      */
-    virtual RealPoint rpp( const AngularCoordinates t) const ;
+    virtual RealPoint rpp( const AngularCoordinates &t) const ;
     
 
      /**
@@ -199,7 +205,7 @@ namespace DGtal
      *
      * @return the vector (rpp(M)) wich is second the partial derivative with respect to Teta then Phi.
      */
-    virtual RealPoint rtp( const AngularCoordinates t) const ;
+    virtual RealPoint rtp( const AngularCoordinates &t) const ;
     
     
     

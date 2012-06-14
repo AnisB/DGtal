@@ -52,7 +52,8 @@ DGtal::Ellipsoid<T>::~Ellipsoid()
 
 template <typename T>
 inline
-DGtal::Ellipsoid<T>::Ellipsoid( const double x0, const double y0, const double  z0, const double a, const double b, const double  c):
+DGtal::Ellipsoid<T>::Ellipsoid( const double x0, const double y0, const double  z0,
+				const double a, const double b, const double  c):
   myFactors(a,b,c), myCenter(x0,y0,z0) 
 {}
 
@@ -81,25 +82,31 @@ DGtal::Ellipsoid<T>::parameter( const RealPoint & pp ) const
   RealPoint l( pp );
   l -= myCenter;
   AngularCoordinates angle ; 
-  
-  
-  
-  if((fabs(l[0])<0.0001)&&(fabs(l[1])<0.0001))
-  {
-    angle.first=0;
-    if(l[2]>=0)
-    angle.second=0;
-    if(l[2]<0)
-    angle.second=M_PI;
-  }
+ 
+  double r = sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]);
+
+  angle.first = atan(l[1]/l[0]) + M_PI/2.0;
+  if (r != 0)
+    angle.second = acos ( l[2] / r);
   else
-  {
-  angle.first=atan2(l[1],l[0]);
-  if(l[1]>=0)
-  angle.second=asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
-  if(l[1]<0)
-  angle.second=-asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
-  }
+    angle.second = 0;
+  
+ // if((fabs(l[0])<0.0001)&&(fabs(l[1])<0.0001))
+  // {
+  //   angle.first=0;
+  //   if(l[2]>=0)
+  //   angle.second=0;
+  //   if(l[2]<0)
+  //   angle.second=M_PI;
+  // }
+  // else
+  // {
+  // angle.first=atan2(l[1],l[0]);
+  // if(l[1]>=0)
+  // angle.second=asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
+  // if(l[1]<0)
+  // angle.second=-asin(sqrt(l[1]*l[1]+l[0]*l[0])/sqrt(l[1]*l[1]+l[0]*l[0]+l[2]*l[2]));
+  // }
   return angle;
   
   /*
@@ -126,8 +133,6 @@ DGtal::Ellipsoid<T>::parameter( const RealPoint & pp ) const
       angle.second=acos(l[2]/norme);
     }
   */
-  
-  return angle;
 }
 
 /**
@@ -139,12 +144,13 @@ DGtal::Ellipsoid<T>::parameter( const RealPoint & pp ) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::x( AngularCoordinates t ) const
+DGtal::Ellipsoid<T>::x( const  AngularCoordinates &t ) const
 {
-  RealPoint c( myFactors[0]*cos(t.first)*cos(t.second),myFactors[1]*sin(t.first)*cos(t.second),myFactors[2]*sin(t.second));   
+  RealPoint c( myFactors[0]*cos(t.first)*sin(t.second),
+	       myFactors[1]*sin(t.first)*sin(t.second),
+	       myFactors[2]*cos(t.second));   
    c += myCenter;
-  
-
+ 
   return c;
 }
 
@@ -158,7 +164,7 @@ DGtal::Ellipsoid<T>::x( AngularCoordinates t ) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::gradient( const AngularCoordinates t) const 
+DGtal::Ellipsoid<T>::gradient( const AngularCoordinates &t) const 
 {
   RealPoint p= x(t);
   double x=2*(p[0]-myCenter[0])/(myFactors[0]*myFactors[0]);
@@ -175,9 +181,11 @@ DGtal::Ellipsoid<T>::gradient( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::rt( const AngularCoordinates t) const 
+DGtal::Ellipsoid<T>::rt( const AngularCoordinates& t) const 
 {
-	return RealPoint(-myFactors[0]*sin(t.first)*sin(t.second),myFactors[1]*cos(t.first)*sin(t.second),0);
+  return RealPoint(-myFactors[0]*sin(t.first)*sin(t.second),
+		   myFactors[1]*cos(t.first)*sin(t.second),
+		   0);
 }
 
 
@@ -190,9 +198,11 @@ DGtal::Ellipsoid<T>::rt( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::rp( const AngularCoordinates t) const 
+DGtal::Ellipsoid<T>::rp( const AngularCoordinates &t) const 
 {
-  return RealPoint(myFactors[0]*cos(t.first)*cos(t.second),myFactors[1]*sin(t.first )*cos(t.second),-myFactors[2]*sin(t.second));
+  return RealPoint(myFactors[0]*cos(t.first)*cos(t.second),
+		   myFactors[1]*sin(t.first )*cos(t.second),
+		   -myFactors[2]*sin(t.second));
 }
 
 
@@ -204,9 +214,11 @@ DGtal::Ellipsoid<T>::rp( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::rtt( const AngularCoordinates t) const 
+DGtal::Ellipsoid<T>::rtt( const AngularCoordinates &t) const 
 {
-  return RealPoint(-myFactors[0]*cos(t.first)*sin(t.second),-myFactors[1]*sin(t.first)*sin(t.second),0);
+  return RealPoint(-myFactors[0]*cos(t.first)*sin(t.second),
+		   -myFactors[1]*sin(t.first)*sin(t.second),
+		   0);
 }
 
 
@@ -219,9 +231,11 @@ DGtal::Ellipsoid<T>::rtt( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::rpp( const AngularCoordinates t) const 
+DGtal::Ellipsoid<T>::rpp( const AngularCoordinates &t) const 
 {
-  return RealPoint(-myFactors[0]*cos(t.first)*sin(t.second),-myFactors[1]*sin(t.first)*sin(t.second),-cos(t.second));
+  return RealPoint(-myFactors[0]*cos(t.first)*sin(t.second),
+		   -myFactors[1]*sin(t.first)*sin(t.second),
+		   -cos(t.second));
 }
     
 /**
@@ -232,9 +246,11 @@ DGtal::Ellipsoid<T>::rpp( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::Ellipsoid<T>::RealPoint 
-DGtal::Ellipsoid<T>::rtp( const AngularCoordinates t) const 
+DGtal::Ellipsoid<T>::rtp( const AngularCoordinates &t) const 
 {
-  return RealPoint(-myFactors[0]*sin(t.first)*cos(t.second),myFactors[1]*cos(t.first)*cos(t.second),0);
+  return RealPoint(-myFactors[0]*sin(t.first)*cos(t.second),
+		   myFactors[1]*cos(t.first)*cos(t.second),
+		   0);
 }
     
 

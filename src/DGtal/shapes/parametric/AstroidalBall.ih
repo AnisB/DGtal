@@ -112,7 +112,7 @@ DGtal::AstroidalBall<T>::parameter( const RealPoint & pp ) const
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::x( AngularCoordinates t ) const
+DGtal::AstroidalBall<T>::x(const AngularCoordinates &t ) const
 {
   double mf0= myFactors[0]*myFactors[0]*myFactors[0];
   double mf1= myFactors[1]*myFactors[1]*myFactors[1];
@@ -155,7 +155,7 @@ ASSERT(fabs(a - 4) < 0.0001);
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::gradient( const AngularCoordinates t) const 
+DGtal::AstroidalBall<T>::gradient( const AngularCoordinates& t) const 
 {
   RealPoint p= x(t);
   double x=2.0f*(p[0]-myCenter[0])/(myFactors[0]*myFactors[0]);
@@ -172,7 +172,7 @@ DGtal::AstroidalBall<T>::gradient( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::rt( const AngularCoordinates t) const 
+DGtal::AstroidalBall<T>::rt( const AngularCoordinates &t) const 
 {
 
   double mf0= myFactors[0]*myFactors[0]*myFactors[0];
@@ -205,7 +205,7 @@ DGtal::AstroidalBall<T>::rt( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::rp( const AngularCoordinates t) const 
+DGtal::AstroidalBall<T>::rp( const AngularCoordinates& t) const 
 {
   double mf0= myFactors[0]*myFactors[0]*myFactors[0];
   double mf1= myFactors[1]*myFactors[1]*myFactors[1];
@@ -235,7 +235,7 @@ DGtal::AstroidalBall<T>::rp( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::rtt( const AngularCoordinates t) const 
+DGtal::AstroidalBall<T>::rtt( const AngularCoordinates& t) const 
 { 
   double mf0= myFactors[0]*myFactors[0]*myFactors[0];
   double mf1= myFactors[1]*myFactors[1]*myFactors[1];
@@ -269,7 +269,7 @@ DGtal::AstroidalBall<T>::rtt( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::rpp( const AngularCoordinates t) const 
+DGtal::AstroidalBall<T>::rpp( const AngularCoordinates& t) const 
 {
 
   double mf0= myFactors[0]*myFactors[0]*myFactors[0];
@@ -300,7 +300,7 @@ DGtal::AstroidalBall<T>::rpp( const AngularCoordinates t) const
 template <typename T>
 inline
 typename DGtal::AstroidalBall<T>::RealPoint 
-DGtal::AstroidalBall<T>::rtp( const AngularCoordinates t) const 
+DGtal::AstroidalBall<T>::rtp( const AngularCoordinates &t) const 
 {
   double mf0= myFactors[0]*myFactors[0]*myFactors[0];
   double mf1= myFactors[1]*myFactors[1]*myFactors[1];
